@@ -1,40 +1,44 @@
 package peaksoft.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import peaksoft.dto.request.ProductRequest;
+import peaksoft.dto.response.ProductResponse;
 import peaksoft.entity.Product;
 import peaksoft.repository.ProductRepository;
 import peaksoft.service.ProductService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
     @Override
-    public Product createProduct(Product product) {
-        return productRepository.save(product);
+    public ProductResponse createProduct(ProductRequest productRequest) {
+        Product product = new Product();
+        BeanUtils.copyProperties(productRequest, product);
+        Product savedProduct = productRepository.save(product);
+        ProductResponse productResponse = new ProductResponse();
+        BeanUtils.copyProperties(savedProduct, productResponse);
+        return productResponse;
     }
 
     @Override
-    public Product updateProduct(Long productId, Product product) {
-        Optional<Product> existingProduct = productRepository.findById(productId);
-        if (existingProduct.isPresent()) {
-            Product updatedProduct = existingProduct.get();
-            updatedProduct.setName(product.getName());
-            updatedProduct.setPrice(product.getPrice());
-            updatedProduct.setImages(product.getImages());
-            updatedProduct.setCharacteristic(product.getCharacteristic());
-            updatedProduct.setIsFavorite(product.getIsFavorite());
-            updatedProduct.setMadeIn(product.getMadeIn());
-            updatedProduct.setCategory(product.getCategory());
-            return productRepository.save(updatedProduct);
+    public ProductResponse updateProduct(Long productId, ProductRequest productRequest) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            BeanUtils.copyProperties(productRequest, product);
+            Product updatedProduct = productRepository.save(product);
+            ProductResponse productResponse = new ProductResponse();
+            BeanUtils.copyProperties(updatedProduct, productResponse);
+            return productResponse;
         } else {
             return null;
         }
@@ -46,12 +50,27 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getProductById(Long productId) {
-        return productRepository.findById(productId).orElse(null);
+    public ProductResponse getProductById(Long productId) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            ProductResponse productResponse = new ProductResponse();
+            BeanUtils.copyProperties(product, productResponse);
+            return productResponse;
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductResponse> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(product -> {
+                    ProductResponse productResponse = new ProductResponse();
+                    BeanUtils.copyProperties(product, productResponse);
+                    return productResponse;
+                })
+                .collect(Collectors.toList());
     }
 }

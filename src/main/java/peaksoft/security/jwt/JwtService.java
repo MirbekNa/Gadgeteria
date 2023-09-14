@@ -25,7 +25,7 @@ public class JwtService {
                 .sign(Algorithm.HMAC256(SECRET_KEY));
     }
 
-    public String validateToken(String token) {//az@gmail.com
+    public String validateToken(String token) {
         JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(SECRET_KEY))
                 .build();
         DecodedJWT decodedJWT = jwtVerifier.verify(token);

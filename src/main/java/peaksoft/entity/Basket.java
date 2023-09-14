@@ -1,17 +1,24 @@
 package peaksoft.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import peaksoft.entity.IdGen.IdGenerator;
+import lombok.*;
 
 import java.util.List;
 
-@Data
 @Entity
 @Table(name = "baskets")
-public class Basket extends IdGenerator {
-    @ManyToMany(mappedBy = "baskets", cascade = CascadeType.ALL)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Basket {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "basket_gen")
+    @SequenceGenerator(name = "basket_gen",sequenceName = "basket_seq",allocationSize = 1)
+    private Long id;
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     private List<Product> products;
-    @OneToOne(mappedBy = "basket", cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
     private User user;
 }

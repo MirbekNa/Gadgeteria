@@ -1,37 +1,49 @@
 package peaksoft.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import peaksoft.dto.request.BrandRequest;
+import peaksoft.dto.request.BasketRequest;
+import peaksoft.dto.response.BrandResponse;
+import peaksoft.dto.response.BasketResponse;
 import peaksoft.entity.Brand;
+import peaksoft.entity.Basket;
 import peaksoft.repository.BrandRepository;
+import peaksoft.repository.BasketRepository;
 import peaksoft.service.BrandService;
+import peaksoft.service.BasketService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class BrandServiceImpl implements BrandService {
 
     private final BrandRepository brandRepository;
 
-
     @Override
-    public Brand createBrand(Brand brand) {
-        return brandRepository.save(brand);
+    public BrandResponse createBrand(BrandRequest brandRequest) {
+        Brand brand = new Brand();
+        BeanUtils.copyProperties(brandRequest, brand);
+        Brand savedBrand = brandRepository.save(brand);
+        BrandResponse brandResponse = new BrandResponse();
+        BeanUtils.copyProperties(savedBrand, brandResponse);
+        return brandResponse;
     }
 
     @Override
-    public Brand updateBrand(Long brandId, Brand brand) {
-        Optional<Brand> existingBrand = brandRepository.findById(brandId);
-        if (existingBrand.isPresent()) {
-            Brand updatedBrand = existingBrand.get();
-            updatedBrand.setBrandName(brand.getBrandName());
-            updatedBrand.setImage(brand.getImage());
-            return brandRepository.save(updatedBrand);
+    public BrandResponse updateBrand(Long brandId, BrandRequest brandRequest) {
+        Optional<Brand> optionalBrand = brandRepository.findById(brandId);
+        if (optionalBrand.isPresent()) {
+            Brand brand = optionalBrand.get();
+            BeanUtils.copyProperties(brandRequest, brand);
+            Brand updatedBrand = brandRepository.save(brand);
+            BrandResponse brandResponse = new BrandResponse();
+            BeanUtils.copyProperties(updatedBrand, brandResponse);
+            return brandResponse;
         } else {
             return null;
         }
@@ -43,12 +55,28 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Brand getBrandById(Long brandId) {
-        return brandRepository.findById(brandId).orElse(null);
+    public BrandResponse getBrandById(Long brandId) {
+        Optional<Brand> optionalBrand = brandRepository.findById(brandId);
+        if (optionalBrand.isPresent()) {
+            Brand brand = optionalBrand.get();
+            BrandResponse brandResponse = new BrandResponse();
+            BeanUtils.copyProperties(brand, brandResponse);
+            return brandResponse;
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public List<Brand> getAllBrands() {
-        return brandRepository.findAll();
+    public List<BrandResponse> getAllBrands() {
+        List<Brand> brands = brandRepository.findAll();
+        return brands.stream()
+                .map(brand -> {
+                    BrandResponse brandResponse = new BrandResponse();
+                    BeanUtils.copyProperties(brand, brandResponse);
+                    return brandResponse;
+                })
+                .collect(Collectors.toList());
     }
 }
+

@@ -1,13 +1,17 @@
 package peaksoft.service;
 
+import peaksoft.dto.request.BasketRequest;
+import peaksoft.dto.response.BasketResponse;
 import peaksoft.entity.Basket;
 
 import java.util.List;
 
+import java.util.List;
+
 public interface BasketService {
-    Basket createBasket(Basket basket);
-    Basket updateBasket(Long basketId, Basket basket);
+    BasketResponse createBasket(BasketRequest basketRequest);
+    BasketResponse updateBasket(Long basketId, BasketRequest basketRequest);
     void deleteBasket(Long basketId);
-    Basket getBasketById(Long basketId);
-    List<Basket> getAllBaskets();
+    BasketResponse getBasketById(Long basketId);
+    List<BasketResponse> getAllBaskets();
 }
