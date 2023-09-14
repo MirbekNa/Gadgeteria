@@ -2,34 +2,42 @@ package peaksoft.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import peaksoft.entity.IdGen.IdGenerator;
 import peaksoft.enums.Category;
-import peaksoft.enums.Country;
 
-import java.math.BigDecimal;
 import java.util.List;
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+
 @Entity
 @Table(name = "products")
-public class Product extends IdGenerator {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "product_gen")
+    @SequenceGenerator(name = "product_gen",sequenceName = "product_seq",allocationSize = 1)
+    private Long id;
     private String name;
-    private BigDecimal price;
-    @ElementCollection
+    private int price;
+    @Lob
     private List<String> images;
     private String characteristic;
-    private Boolean isFavorite;
-    @Enumerated(EnumType.STRING)
-    private Country madeIn;
+    private boolean isFavorite;
+    private String madeIn;
     @Enumerated(EnumType.STRING)
     private Category category;
-@OneToMany
-    private List<Comment> comment;
-    @ManyToOne(cascade = CascadeType.ALL)
+
+
+    @ManyToMany(mappedBy = "products",cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH,CascadeType.REMOVE})
+    private List<Basket> baskets;
+
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
     private Brand brand;
-@ManyToMany
-    private List<Basket>baskets;
+
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
+    private Comment comment;
+
+    @OneToMany(mappedBy = "product",cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
+    private List<Favorite> favorite;
 }

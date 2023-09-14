@@ -1,24 +1,24 @@
 package peaksoft.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
-import peaksoft.entity.IdGen.IdGenerator;
+
+@Entity
+@Table(name = "favorites")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
-@Table(name = "favorites")
-public class Favorite extends IdGenerator {
+public class Favorite {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "favorites_gen")
+    @SequenceGenerator(name = "favorites_gen",sequenceName = "favorites_seq",allocationSize = 1)
+    private Long id;
 
-    @OneToOne
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
     private User user;
 
-    @OneToOne
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
     private Product product;
-
-
 }
