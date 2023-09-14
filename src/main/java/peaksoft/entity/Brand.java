@@ -2,9 +2,13 @@ package peaksoft.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.*;
 import peaksoft.entity.IdGen.IdGenerator;
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "brands")
 public class Brand extends IdGenerator {

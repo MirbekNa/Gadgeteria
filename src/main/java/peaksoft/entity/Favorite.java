@@ -3,9 +3,13 @@ package peaksoft.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.*;
 import peaksoft.entity.IdGen.IdGenerator;
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "favorites")
 public class Favorite extends IdGenerator {

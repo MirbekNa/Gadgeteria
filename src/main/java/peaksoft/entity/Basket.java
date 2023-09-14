@@ -1,12 +1,16 @@
 package peaksoft.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import peaksoft.entity.IdGen.IdGenerator;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "baskets")
 public class Basket extends IdGenerator {

@@ -1,37 +1,54 @@
 package peaksoft.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import peaksoft.dto.request.CommentRequest;
+import peaksoft.dto.request.FavoriteRequest;
+import peaksoft.dto.request.ProductRequest;
+import peaksoft.dto.response.CommentResponse;
+import peaksoft.dto.response.FavoriteResponse;
+import peaksoft.dto.response.ProductResponse;
 import peaksoft.entity.Comment;
+import peaksoft.entity.Favorite;
+import peaksoft.entity.Product;
 import peaksoft.repository.CommentRepository;
+import peaksoft.repository.FavoriteRepository;
+import peaksoft.repository.ProductRepository;
 import peaksoft.service.CommentService;
+import peaksoft.service.FavoriteService;
+import peaksoft.service.ProductService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
 
     @Override
-    public Comment createComment(Comment comment) {
-        return commentRepository.save(comment);
+    public CommentResponse createComment(CommentRequest commentRequest) {
+        Comment comment = new Comment();
+        BeanUtils.copyProperties(commentRequest, comment);
+        Comment savedComment = commentRepository.save(comment);
+        CommentResponse commentResponse = new CommentResponse();
+        BeanUtils.copyProperties(savedComment, commentResponse);
+        return commentResponse;
     }
 
     @Override
-    public Comment updateComment(Long commentId, Comment comment) {
-        Optional<Comment> existingComment = commentRepository.findById(commentId);
-        if (existingComment.isPresent()) {
-            Comment updatedComment = existingComment.get();
-            updatedComment.setComment(comment.getComment());
-            updatedComment.setDateOfComment(comment.getDateOfComment());
-            // Дополнительные поля, если есть
-            return commentRepository.save(updatedComment);
+    public CommentResponse updateComment(Long commentId, CommentRequest commentRequest) {
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        if (optionalComment.isPresent()) {
+            Comment comment = optionalComment.get();
+            BeanUtils.copyProperties(commentRequest, comment);
+            Comment updatedComment = commentRepository.save(comment);
+            CommentResponse commentResponse = new CommentResponse();
+            BeanUtils.copyProperties(updatedComment, commentResponse);
+            return commentResponse;
         } else {
             return null;
         }
@@ -43,12 +60,27 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment getCommentById(Long commentId) {
-        return commentRepository.findById(commentId).orElse(null);
+    public CommentResponse getCommentById(Long commentId) {
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        if (optionalComment.isPresent()) {
+            Comment comment = optionalComment.get();
+            CommentResponse commentResponse = new CommentResponse();
+            BeanUtils.copyProperties(comment, commentResponse);
+            return commentResponse;
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public List<Comment> getAllComments() {
-        return commentRepository.findAll();
+    public List<CommentResponse> getAllComments() {
+        List<Comment> comments = commentRepository.findAll();
+        return comments.stream()
+                .map(comment -> {
+                    CommentResponse commentResponse = new CommentResponse();
+                    BeanUtils.copyProperties(comment, commentResponse);
+                    return commentResponse;
+                })
+                .collect(Collectors.toList());
     }
 }

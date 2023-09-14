@@ -1,13 +1,14 @@
 package peaksoft.service;
 
-import peaksoft.entity.Comment;
+import peaksoft.dto.request.CommentRequest;
+import peaksoft.dto.response.CommentResponse;
 
 import java.util.List;
 
 public interface CommentService {
-    Comment createComment(Comment comment);
-    Comment updateComment(Long commentId, Comment comment);
+    CommentResponse createComment(CommentRequest commentRequest);
+    CommentResponse updateComment(Long commentId, CommentRequest commentRequest);
     void deleteComment(Long commentId);
-    Comment getCommentById(Long commentId);
-    List<Comment> getAllComments();
+    CommentResponse getCommentById(Long commentId);
+    List<CommentResponse> getAllComments();
 }

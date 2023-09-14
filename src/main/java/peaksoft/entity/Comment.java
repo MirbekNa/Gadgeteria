@@ -1,14 +1,18 @@
 package peaksoft.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import peaksoft.entity.IdGen.IdGenerator;
 
 import java.time.LocalDateTime;
 import java.time.Duration;
 import java.time.Period;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "comments")
 public class Comment extends IdGenerator {

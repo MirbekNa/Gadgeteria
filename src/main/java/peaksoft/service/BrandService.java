@@ -1,13 +1,14 @@
 package peaksoft.service;
 
-import peaksoft.entity.Brand;
+import peaksoft.dto.request.BrandRequest;
+import peaksoft.dto.response.BrandResponse;
 
 import java.util.List;
 
 public interface BrandService {
-    Brand createBrand(Brand brand);
-    Brand updateBrand(Long brandId, Brand brand);
+    BrandResponse createBrand(BrandRequest brandRequest);
+    BrandResponse updateBrand(Long brandId, BrandRequest brandRequest);
     void deleteBrand(Long brandId);
-    Brand getBrandById(Long brandId);
-    List<Brand> getAllBrands();
+    BrandResponse getBrandById(Long brandId);
+    List<BrandResponse> getAllBrands();
 }

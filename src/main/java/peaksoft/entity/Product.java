@@ -1,14 +1,18 @@
 package peaksoft.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import peaksoft.entity.IdGen.IdGenerator;
 import peaksoft.enums.Category;
 import peaksoft.enums.Country;
 
 import java.math.BigDecimal;
 import java.util.List;
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "products")
 public class Product extends IdGenerator {

@@ -1,13 +1,16 @@
 package peaksoft.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import peaksoft.entity.IdGen.IdGenerator;
 import peaksoft.enums.Role;
 
 import java.time.LocalDateTime;
-
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "users")
 public class User extends IdGenerator {
