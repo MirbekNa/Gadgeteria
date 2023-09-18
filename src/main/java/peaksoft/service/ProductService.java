@@ -1,18 +1,18 @@
 package peaksoft.service;
 
-import peaksoft.dto.request.ProductRequest;
-import peaksoft.dto.response.ProductResponse;
-import peaksoft.entity.Product;
-
-import java.util.List;
+import peaksoft.dto.SimpleResponse;
+import peaksoft.dto.dtoProduct.AllProductRequest;
+import peaksoft.dto.dtoProduct.ProductRequest;
+import peaksoft.dto.dtoProduct.ProductResponse;
+import peaksoft.enums.Category;
 
 import java.util.List;
 
 public interface ProductService {
-    ProductResponse createProduct(ProductRequest productRequest);
-    ProductResponse updateProduct(Long productId, ProductRequest productRequest);
-    void deleteProduct(Long productId);
-    ProductResponse getProductById(Long productId);
-    List<ProductResponse> getAllProducts();
-}
+  List<AllProductRequest> getAllProducts(Category category, int price);
+  SimpleResponse saveProduct(ProductRequest productRequest,Long brandId);
+  SimpleResponse updateProduct(Long id, ProductRequest productRequest);
+  ProductResponse getProductById(Long id);
+  SimpleResponse deleteProductById(Long id);
 
+}

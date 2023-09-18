@@ -1,19 +1,24 @@
 package peaksoft.service;
 
-import peaksoft.dto.request.SignUpRequest;
-import peaksoft.dto.request.UserRequest;
-import peaksoft.dto.response.UserResponse;
-import peaksoft.entity.User;
-import peaksoft.exceptions.AlreadyExistException;
+import peaksoft.dto.SimpleResponse;
+import peaksoft.dto.dtoBasket.GetAllUsersBasketResponse;
+import peaksoft.dto.dtoFavorite.FavoriteResponse;
+import peaksoft.dto.dtoUser.UserRequest;
+import peaksoft.dto.dtoUser.UserResponse;
+import peaksoft.exceptions.BadCredentialException;
 
 import java.util.List;
 
 public interface UserService {
-    UserResponse signUp(SignUpRequest signUpRequest) throws AlreadyExistException;
-    void init();
-    UserResponse createUser(UserRequest userRequest);
-    UserResponse updateUser(Long userId, UserRequest userRequest);
-    void deleteUser(Long userId);
-    UserResponse getUserById(Long userId);
     List<UserResponse> getAllUsers();
+    SimpleResponse saveUser(UserRequest userRequest);
+    SimpleResponse updateUser(Long id, UserRequest userRequest);
+    UserResponse getUserById(Long id);
+    SimpleResponse deleteUserById(Long id);
+    SimpleResponse addOrDeleteFavorite(Long productId);
+    List<FavoriteResponse> getAllUsersFavorites() throws BadCredentialException;
+    SimpleResponse addOrDeleteProductsToBasket(Long productId);
+    GetAllUsersBasketResponse getUsersAllBasketsProduct();
+    SimpleResponse deleteAllProductsFromBasket();
+
 }

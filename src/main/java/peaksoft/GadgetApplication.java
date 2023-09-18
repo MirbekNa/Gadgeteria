@@ -13,7 +13,6 @@ import java.util.Random;
 public class GadgetApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(GadgetApplication.class, args);
 Random random = new Random();
 int random1= random.nextInt(100);
